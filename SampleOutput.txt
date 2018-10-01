@@ -1,0 +1,25 @@
+Adversarial Search using Minimax by Arati Banerjee and Irene Tanner:
+
+    Game board  : game-small-new
+    Search depth: 2
+
+    Preliminary runs : 10
+    Granularity      : 1
+    Max move limit   : 1000
+
+Preliminary run results :
+
+	1: 1 wins, 0 losses, 149 avg moves
+	2: 1 wins, 0 losses, 180 avg moves
+	3: 0 wins, 1 losses, 193 avg moves
+	4: 1 wins, 0 losses, 177 avg moves
+	5: 1 wins, 0 losses, 199 avg moves
+	6: 1 wins, 0 losses, 298 avg moves
+	7: 1 wins, 0 losses, 209 avg moves
+	8: 1 wins, 0 losses, 353 avg moves
+	9: 1 wins, 0 losses, 247 avg moves
+  10: 0 wins, 1 losses, 107 avg moves
+
+Results for 10 games: 8 wins, 2 losses (80.00%), 211 avg moves
+
+Game over: Pacman has eaten all the food

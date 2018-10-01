@@ -1,0 +1,57 @@
+Important Notes on Program 2
+	- The skeleton code allows the program to accept either two or five command line arguments
+		- the depth for the search must be a variable set by input and not hard-coded
+		- for searching beyond the depth limit, program must implement an evaluation function to estimate state values
+
+	- Game board details
+		- Food dots, power pellets, Pac-Man, 2 ghosts
+		- Gray cells are "ghost house" and prohibited for Pac-Man
+		- Ghosts - "scatter" for 7 turns, "chase" for 20 turns, "frightened" run randomly for 20 moves (after power pellet)
+			- Red (Blinky)
+				- Home - upper right
+				- Chase mode - goes directly for Pac-Man
+			- Cyan (Inky)
+				- Home - lower right
+				- Chase mode - goes to spot directly opposite from Blinky on a line from Blinky through Pac-Man
+
+	- Implementing Minimax
+		- a single move is completed when by Pac-Man, Blinky, and Inky each take one move
+			- "As a result, if we assume that on average each of these players can move to two available cells, then your minimax algorithm must evaluate 8 board positions for a depth level of one, and 64 board positions for a depth level of two." and 256 board positions for depth level 3 (from powerpoint)
+				- implying that the provided map is the one that will be tested with?
+		- Must implement an evaluation function to compute values for the states, as many or few as desired - depth-limited minimax
+			- possible ones include distance to nearest food, nearest ghost, whether Pac-Man is in a long corridor or alley
+			- "However, your program must spend so much time evaluating positions that the game is unplayable, that is, the visible motion on the board is so stuttered that it does not proceed smoothly."
+				- probable typo, probably should be "...should NOT spend so much time..."
+				- edit - based on powerpoint, it was almost definitely a typo
+
+	- Program Inputs
+		- Must be able to accept all 5 command-line arguments
+			- name of the game board
+			- minimax depth (complete moves)
+			- number of simulation epochs
+			- granularity for training each epoch statistics
+			- maximum number of moves allowed
+		- last three may not be provided
+			- allow running complete games without graphics
+			- will run multiple times and record wins and losses
+			- if Pac-Man is alive but not eaten all pellets by max move - loss
+
+	- Launch (with and without background simulation mode)
+		- without jar (2 steps)
+			- javac -cp lib/PacSimLib.jar PacSimMinimax.java
+			- java -cp .;lib/PacSimLib.jar PacSimMinimax
+		- with jar (1 step)
+			- java -jar PacSimMinimax.jar game-small-new 2
+			- java -jar PacSimMinimax.jar game-small-new 2 10 1 1000
+		- making a jar
+			- jar cfm PacSimMinimax.jar MANIFEST>MF *.class *.java
+
+	- Code
+		- constructor should use the search depth argument - this is not passed to simulation engine
+		- source code should contain a block about how positions are evaluated including the features considered and weight of each
+		- all work will be done in action method
+
+	- Will be tested with depths 1, 2, and 3 with and without background simulations
+	- Average over 40% is considered successful
+	- "Except for including your name (or names, if teaming), the required output statements are already provided by the template code that is provided to you."
+		- implying worrying about output is not necessary - just implement the algorithm
