@@ -66,8 +66,80 @@ public class PacSimMinimax implements PacAction {
 	{
 		PacCell[][] grid = (PacCell[][]) state;
 		PacFace newFace = null;
-			// code here
+		PacmanCell pc = PacUtils.findPacman(grid);
+		
+		// max function finds highest score in array and returns point associated with that score
+		// should also handle the case where scores are tied
+		Point next = max(eval(pc.getLoc, grid));
+		newFace = PacUtils.direction(pc.getLoc(), next);
+	    grid = PacUtils.movePacman(pc.getLoc(), next, grid);
+		
+		
 		return newFace;
 	}
+	
+	/* 
+	 * In our evaluation function, the score for each move is based off of
+	 * ghost mode, distance from nearest ghost to pacman, and distance from
+	 * nearest goody to pacman. In chase mode, pacman moving further from a 
+	 * ghost is valued (scored) higher than moving closer to a goody. In scatter 
+	 * mode, pacman moving closer to a goody is valued (scored) higher than moving 
+	 * further from a ghost. In both modes, score is reduced if pacman moves 
+	 * closer to a ghost or further from a goody. In fear mode, distance to ghost
+	 * is disregarded, and score increases if pacman moves closer to a goody.
+	 */
+	public int[] eval(Point point, PacCell[][] cell) {
+		
+		Point nearestGoody = PacUtils.nearestGoody(point, cell);
+		Point nearestGhost = PacUtils.nearestGhost(point, cell);
+		
+		int nearestGoodyFromCur = PacUtils.manhattanDistance(nearestGoody, point);
+		int nearestGhostFromCur = PacUtils.manhattanDistance(nearestGhost, point);
+		
+		// use PacUtils.neighbor() to calculate next possible move/point/direction?
+		for each possible move newPoint {
+			
+			// make array to store score for each direction
+			
+			int nearestGoodyFromPoint = PacUtils.manhattanDistance(nearestGoody, newPoint);
+			int nearestGhostFromPoint = PacUtils.manhattanDistance(nearestGhost, newPoint);
+			
+			if (GhostCell.getMode() == "chase") {
+				
+				if (nearestGhostFromPoint > nearestGhostFromCur)
+					score += 2;
+				else if (nearestGhostFromPoint < nearestGhostFromCur)
+					score -= 2;
+				if (nearestGoodyFromPoint > nearestGoodyFromCur)
+					score -= 1;
+				else if (nearestGoodyFromPoint < nearestGoodyFromCur)
+					score += 1;
+			}
+			
+			else if (GhostCell.getMode() == "scatter") {
+				
+				if (nearestGhostFromPoint > nearestGhostFromCur)
+					score += 1;
+				else if (nearestGhostFromPoint < nearestGhostFromCur)
+					score -= 1;
+				if (nearestGoodyFromPoint > nearestGoodyFromCur)
+					score -= 2;
+				else if (nearestGoodyFromPoint < nearestGoodyFromCur)
+					score += 2;
+			}
+			
+			else if (GhostCell.getMode() == "fear") {
+			
+				if (nearestGoodyFromPoint > nearestGoodyFromCur)
+					score -= 3;
+				else if (nearestGoodyFromPoint < nearestGoodyFromCur)
+					score += 3;
+			}
+		}
+		
+		return score;
+		
+	}
+	
 
 }
