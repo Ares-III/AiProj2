@@ -96,10 +96,7 @@ public class PacSimMinimax implements PacAction {
 		int nearestGoodyFromCur = PacUtils.manhattanDistance(nearestGoody, point);
 		int nearestGhostFromCur = PacUtils.manhattanDistance(nearestGhost, point);
 		
-		// use PacUtils.neighbor() to calculate next possible move/point/direction?
 		for each possible move newPoint {
-			
-			// make array to store score for each direction
 			
 			int nearestGoodyFromPoint = PacUtils.manhattanDistance(nearestGoody, newPoint);
 			int nearestGhostFromPoint = PacUtils.manhattanDistance(nearestGhost, newPoint);
@@ -107,33 +104,33 @@ public class PacSimMinimax implements PacAction {
 			if (GhostCell.getMode() == "chase") {
 				
 				if (nearestGhostFromPoint > nearestGhostFromCur)
-					score += 2;
+					score += 2 * nearestGhostFromPoint;
 				else if (nearestGhostFromPoint < nearestGhostFromCur)
-					score -= 2;
+					score -= 2 * nearestGhostFromPoint;
 				if (nearestGoodyFromPoint > nearestGoodyFromCur)
-					score -= 1;
+					score -= 1 * nearestGoodyFromPoint;
 				else if (nearestGoodyFromPoint < nearestGoodyFromCur)
-					score += 1;
+					score += 1 * nearestGoodyFromPoint;
 			}
 			
 			else if (GhostCell.getMode() == "scatter") {
 				
 				if (nearestGhostFromPoint > nearestGhostFromCur)
-					score += 1;
+					score += 1 * nearestGhostFromPoint;
 				else if (nearestGhostFromPoint < nearestGhostFromCur)
-					score -= 1;
+					score -= 1 nearestGhostFromPoint;
 				if (nearestGoodyFromPoint > nearestGoodyFromCur)
-					score -= 2;
+					score -= 2 * nearestGoodyFromPoint;
 				else if (nearestGoodyFromPoint < nearestGoodyFromCur)
-					score += 2;
+					score += 2 * nearestGoodyFromPoint;
 			}
 			
 			else if (GhostCell.getMode() == "fear") {
 			
 				if (nearestGoodyFromPoint > nearestGoodyFromCur)
-					score -= 3;
+					score -= 3 * nearestGoodyFromPoint;
 				else if (nearestGoodyFromPoint < nearestGoodyFromCur)
-					score += 3;
+					score += 3 * nearestGoodyFromPoint;
 			}
 		}
 		
