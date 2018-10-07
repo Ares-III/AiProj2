@@ -58,7 +58,7 @@ class tree {
 		maxPointVal = Integer.MIN_VALUE;
 		growTree(root);
 	}
-	
+
 	/*
 	 * In our evaluation function, the score for each move is based off of
 	 * ghost mode, distance from nearest ghost to pacman, and distance from
@@ -75,7 +75,7 @@ class tree {
 
 		GhostCell nearestGhost = PacUtils.nearestGhost(cur, grid);
 		Point nearestGoody = PacUtils.nearestGoody(cur, grid);
-		
+
 		int nearestGoodyFromCur = PacUtils.manhattanDistance(nearestGoody, cur);
 		int nearestGhostFromCur = PacUtils.manhattanDistance(nearestGhost.getLoc(), cur);
 
@@ -268,5 +268,3 @@ public class PacSimMinimax implements PacAction {
 		return newFace;
 	}
 }
-
-	
