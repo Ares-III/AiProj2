@@ -9,7 +9,16 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import pacsim.*;
+import pacsim.BFSPath;
+import pacsim.PacAction;
+import pacsim.PacCell;
+import pacsim.PacFace;
+import pacsim.PacSim;
+import pacsim.PacUtils;
+import pacsim.GhostCell;
+import pacsim.PacmanCell;
+import pacsim.PacMode;
+import pacsim.PathCell;
 import java.lang.Math;
 
 class treeNode {
@@ -142,17 +151,17 @@ public class PacSimMinimax implements PacAction {
 	 * closer to a ghost or further from a goody. In fear mode, distance to ghost
 	 * is disregarded, and score increases if pacman moves closer to a goody.
 	 */
-	public int eval(Point cur, Point newPoint, Point nearestGoody, Point nearestGhost) {
+	public int eval(Point cur, Point newPoint, Point nearestGoody, GhostCell nearestGhost) {
 
 		score = 0;
 
 		int nearestGoodyFromCur = PacUtils.manhattanDistance(nearestGoody, cur);
-		int nearestGhostFromCur = PacUtils.manhattanDistance(nearestGhost, cur);
+		int nearestGhostFromCur = PacUtils.manhattanDistance(nearestGhost.getLoc(), cur);
 
 		int nearestGoodyFromPoint = PacUtils.manhattanDistance(nearestGoody, newPoint);
-		int nearestGhostFromPoint = PacUtils.manhattanDistance(nearestGhost, newPoint);
+		int nearestGhostFromPoint = PacUtils.manhattanDistance(nearestGhost.getLoc(), newPoint);
 
-		if (GhostCell.getMode() == "chase") {
+		if (nearestGhost.getMode().equals(PacMode.valueOf("CHASE"))) {
 
 			if (nearestGhostFromPoint > nearestGhostFromCur)
 				score += 2 * nearestGhostFromPoint;
@@ -164,7 +173,7 @@ public class PacSimMinimax implements PacAction {
 				score += 1 * nearestGoodyFromPoint;
 		}
 
-		else if (GhostCell.getMode() == "scatter") {
+		else if (nearestGhost.getMode().equals(PacMode.valueOf("SCATTER"))) {
 
 			if (nearestGhostFromPoint > nearestGhostFromCur)
 				score += 1 * nearestGhostFromPoint;
@@ -176,7 +185,7 @@ public class PacSimMinimax implements PacAction {
 				score += 2 * nearestGoodyFromPoint;
 		}
 
-		else if (GhostCell.getMode() == "fear") {
+		else if (nearestGhost.getMode().equals(PacMode.valueOf("FEAR"))) {
 
 			if (nearestGoodyFromPoint > nearestGoodyFromCur)
 				score -= 3 * nearestGoodyFromPoint;
@@ -192,13 +201,17 @@ public class PacSimMinimax implements PacAction {
 
 		Point next;
 		int max = -9999;
+		Point n;
+		Point e;
+		Point s;
+		Point w;
 
-		Point nearestGhost = PacUtils.nearestGhost(cur, grid);
+		GhostCell nearestGhost = PacUtils.nearestGhost(cur, grid);
 		Point nearestGoody = PacUtils.nearestGoody(cur, grid);
 
-		PacCell move = PacUtils.neighbor(PacFace.valueof("N"), cur, grid);
-		if (!(move instanceof HouseCell) && !(move instanceof WallCell)) {
-			Point n = move.getLoc();
+		PacCell move = PacUtils.neighbor(PacFace.valueOf("N"), cur, grid);
+		if (move instanceof PathCell) {
+			n = move.getLoc();
 			score = eval(cur, n, nearestGoody, nearestGhost);
 		}
 
@@ -207,9 +220,9 @@ public class PacSimMinimax implements PacAction {
 			next = n;
 		}
 
-		move = PacUtils.neighbor(PacFace.valueof("E"), cur, grid);
-		if (!(move instanceof HouseCell) && !(move instanceof WallCell)) {
-			Point e = move.getLoc();
+		move = PacUtils.neighbor(PacFace.valueOf("E"), cur, grid);
+		if (move instanceof PathCell) {
+			e = move.getLoc();
 			score = eval(cur, e, nearestGoody, nearestGhost);
 		}
 
@@ -218,9 +231,9 @@ public class PacSimMinimax implements PacAction {
 			next = e;
 		}
 
-		move = PacUtils.neighbor(PacFace.valueof("S"), cur, grid);
-		if (!(move instanceof HouseCell) && !(move instanceof WallCell)) {
-			Point s = move.getLoc();
+		move = PacUtils.neighbor(PacFace.valueOf("S"), cur, grid);
+		if (move instanceof PathCell) {
+			s = move.getLoc();
 			score = eval(cur, s, nearestGoody, nearestGhost);
 		}
 
@@ -229,9 +242,9 @@ public class PacSimMinimax implements PacAction {
 			next = s;
 		}
 
-		move = PacUtils.neighbor(PacFace.valueof("W"), cur, grid);
-		if (!(move instanceof HouseCell) && !(move instanceof WallCell)) {
-			Point w = move.getLoc();
+		move = PacUtils.neighbor(PacFace.valueOf("W"), cur, grid);
+		if (move instanceof PathCell) {
+			w = move.getLoc();
 			score = eval(cur, w, nearestGoody, nearestGhost);
 		}
 
