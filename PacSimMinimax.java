@@ -26,7 +26,7 @@ class treeNode {
 	int reward;
 	Point currPos;
 	int lvl;
-	Arraylist<treeNode> children;
+	ArrayList<treeNode> children;
 
 	public treeNode(int value, Point position, int level)
 	{
