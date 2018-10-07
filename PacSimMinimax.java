@@ -69,7 +69,7 @@ class tree {
 	 * closer to a ghost or further from a goody. In fear mode, distance to ghost
 	 * is disregarded, and score increases if pacman moves closer to a goody.
 	 */
-	private int eval(Point cur, Point newPoint) {
+	public int eval(Point cur, Point newPoint) {
 
 		int score = 0;
 
@@ -118,7 +118,7 @@ class tree {
 
 	}
 
-	private Point findNext(Point cur, PacCell[][] grid) {
+	public Point findNext(Point cur, PacCell[][] grid) {
 
 		Point next;
 		int max = -9999;
@@ -259,7 +259,7 @@ public class PacSimMinimax implements PacAction {
 		PacmanCell pc = PacUtils.findPacman(grid);
 
 		Point cur = pc.getLoc();
-		Point nextMove = findNext(cur, grid);
+		Point nextMove = tree.findNext(cur, grid);
 
 		newFace = PacUtils.direction(cur, nextMove);
 	    grid = PacUtils.movePacman(cur, nextMove, grid);
