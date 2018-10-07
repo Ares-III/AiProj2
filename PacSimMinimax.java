@@ -71,7 +71,7 @@ class tree {
 	 */
 	private int eval(Point cur, Point newPoint) {
 
-		score = 0;
+		int score = 0;
 
 		GhostCell nearestGhost = PacUtils.nearestGhost(cur, grid);
 		Point nearestGoody = PacUtils.nearestGoody(cur, grid);
@@ -210,7 +210,6 @@ class tree {
 
 public class PacSimMinimax implements PacAction {
 
-	public int score;
 
 	public PacSimMinimax(int depth, String fname, int te, int gran, int max)
 	{
