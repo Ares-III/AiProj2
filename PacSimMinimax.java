@@ -17,7 +17,7 @@ class treeNode {
 	int reward;
 	Point currPos;
 	int lvl;
-	Arraylist<node> children;
+	Arraylist<treeNode> children;
 
 	public treeNode(int value, Point position, int level)
 	{
@@ -52,12 +52,12 @@ class tree {
 
 	private void growTree(treeNode current)
 	{
-		for(int i = 0; i < 4; 1++)
+		for(int i = 0; i < 4; i++)
 		{
-			if(unoccupied(current.currPos.x+x[i], current.currPos.y+y[i], grid))
+			if(PacUtils.unoccupied(current.currPos.x+x[i], current.currPos.y+y[i], grid))
 			{
 				Point thePoint = new Point(current.currPos.x+x[i], current.currPos.y+y[i]);
-				current.children.add(new treeNode(evaluate(current, thePoint), thePoint, 0), thePoint, current.lvl+1);
+				current.children.add(new treeNode(eval(current.currPos, thePoint), thePoint, 0), thePoint, current.lvl+1);
 			}
 		}
 		if(current.lvl+1 >= depth)
