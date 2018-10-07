@@ -45,6 +45,13 @@ class tree {
 
 	treeNode maxPos;
 	int maxPointVal;
+	int score;
+	Point next;
+	int max = -9999;
+	Point n;
+	Point e;
+	Point s;
+	Point w;
 
 	final int[] x = {-1,0,1,0};
 	final int[] y = {0,1,0,-1};
@@ -71,7 +78,7 @@ class tree {
 	 */
 	public int eval(Point cur, Point newPoint) {
 
-		int score = 0;
+		score = 0;
 
 		GhostCell nearestGhost = PacUtils.nearestGhost(cur, grid);
 		Point nearestGoody = PacUtils.nearestGoody(cur, grid);
@@ -119,13 +126,6 @@ class tree {
 	}
 
 	public Point findNext(Point cur, PacCell[][] grid) {
-
-		Point next;
-		int max = -9999;
-		Point n;
-		Point e;
-		Point s;
-		Point w;
 
 		PacCell move = PacUtils.neighbor(PacFace.valueOf("N"), cur, grid);
 		if (move instanceof PathCell) {
@@ -259,7 +259,7 @@ public class PacSimMinimax implements PacAction {
 		PacmanCell pc = PacUtils.findPacman(grid);
 
 		Point cur = pc.getLoc();
-		Point nextMove = tree.findNext(cur, grid);
+		Point nextMove = findNext(cur, grid);
 
 		newFace = PacUtils.direction(cur, nextMove);
 	    grid = PacUtils.movePacman(cur, nextMove, grid);
