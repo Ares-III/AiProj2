@@ -43,6 +43,9 @@ class tree {
 	int depth;
 	treeNode root;
 
+	treeNode maxPos;
+	int maxPointVal;
+
 	final int[] x = {-1,0,1,0};
 	final int[] y = {0,1,0,-1};
 
@@ -51,6 +54,8 @@ class tree {
 		this.depth = depth;
 		grid = (PacCell[][]) state;
 		root = new treeNode(0, PacUtils.findPacman(grid).getLoc(), 0);
+		maxPos = root;
+		maxPointVal = Integer.MIN_VALUE;
 		growTree(root);
 	}
 
@@ -66,7 +71,14 @@ class tree {
 			if(PacUtils.unoccupied(current.currPos.x+x[i], current.currPos.y+y[i], grid))
 			{
 				Point thePoint = new Point(current.currPos.x+x[i], current.currPos.y+y[i]);
-				current.children.add(new treeNode(eval(current.currPos, thePoint), thePoint, 0), thePoint, current.lvl+1);
+				int pointVal = eval(current.currPos, thePoint);
+				treeNode newNode = new treeNode(pointVal, thePoint, current.lvl+1);
+				current.children.add(newNode);
+				if(current.lvl+1 == depth && pointVal > maxPointVal)
+				{
+					maxPos = newNode;
+					maxPointVal = pointVal;
+				}
 			}
 		}
 		if(current.lvl+1 >= depth)
@@ -77,6 +89,11 @@ class tree {
 		{
 			growTree(current.children.get(i));
 		}
+	}
+
+	public Point getNext()
+	{
+		return maxPos.currPos;
 	}
 
 }
