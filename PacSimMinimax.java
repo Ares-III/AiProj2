@@ -12,6 +12,65 @@ import java.util.Collections;
 import pacsim.*;
 import java.lang.Math;
 
+class treeNode {
+
+	int reward;
+	Point currPos;
+	int lvl;
+	Arraylist<node> children;
+
+	public treeNode(int value, Point position, int level)
+	{
+		int reward = value;
+		Point currPos = position;
+		int lvl = level;
+		children = new ArrayList<>();
+	}
+}
+
+class tree {
+
+	PacCell[][] grid;
+	int depth;
+	treeNode root;
+
+	final int[] x = {-1,0,1,0};
+	final int[] y = {0,1,0,-1};
+
+	public tree(Object state, int depth)
+	{
+		this.depth = depth;
+		grid = (PacCell[][]) state;
+		root = new treeNode(0, PacUtils.findPacman(grid).getLoc(), 0);
+		growTree(root);
+	}
+
+	private int eval(Point current, Point newPoint)
+	{
+		return 0;
+	}
+
+	private void growTree(treeNode current)
+	{
+		for(int i = 0; i < 4; 1++)
+		{
+			if(unoccupied(current.currPos.x+x[i], current.currPos.y+y[i], grid))
+			{
+				Point thePoint = new Point(current.currPos.x+x[i], current.currPos.y+y[i]);
+				current.children.add(new treeNode(evaluate(current, thePoint), thePoint, 0), thePoint, current.lvl+1);
+			}
+		}
+		if(current.lvl+1 >= depth)
+		{
+			return;
+		}
+		for(int i = 0; i < current.children.size(); i++)
+		{
+			growTree(current.children.get(i));
+		}
+	}
+
+}
 
 public class PacSimMinimax implements PacAction {
 
