@@ -44,7 +44,7 @@ Important Notes on Program 2
 			- java -jar PacSimMinimax.jar game-small-new 2
 			- java -jar PacSimMinimax.jar game-small-new 2 10 1 1000
 		- making a jar
-			- jar cfm PacSimMinimax.jar MANIFEST>MF *.class *.java
+			- jar cfm PacSimMinimax.jar MANIFEST.MF *.class *.java
 
 	- Code
 		- constructor should use the search depth argument - this is not passed to simulation engine
