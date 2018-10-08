@@ -207,6 +207,10 @@ class tree {
 
 	public Point getNext()
 	{
+		if(maxPos == null)
+		{
+			return PacUtils.nearestUnoccupied(root.currPos, grid);
+		}
 		return maxPos.currPos;
 	}
 
