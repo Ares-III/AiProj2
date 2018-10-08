@@ -39,7 +39,6 @@ Important Notes on Program 2
 	- Launch (with and without background simulation mode)
 		- without jar (2 steps)
 			- javac -cp lib/PacSimLib.jar PacSimMinimax.java
-			- java -cp .;lib/PacSimLib.jar PacSimMinimax game-small-new 2
 			- java -cp .;lib/PacSimLib.jar PacSimMinimax game-small-new 2 10 1 1000
 		- with jar (1 step)
 			- java -jar PacSimMinimax.jar game-small-new 2
