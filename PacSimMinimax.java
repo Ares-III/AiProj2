@@ -93,25 +93,25 @@ class tree {
 		if (nearestGhost.getMode().equals(PacMode.valueOf("CHASE"))) {
 
 			if (nearestGhostFromPoint > nearestGhostFromCur)
-				score += 2 * nearestGhostFromPoint;
+				score += 10 * nearestGhostFromPoint;
 			else if (nearestGhostFromPoint < nearestGhostFromCur)
-				score -= 2 * nearestGhostFromPoint;
+				score -= 20 * nearestGhostFromPoint;
 			if (nearestGoodyFromPoint > nearestGoodyFromCur)
 				score -= 1 * nearestGoodyFromPoint;
 			else if (nearestGoodyFromPoint < nearestGoodyFromCur)
-				score += 1 * nearestGoodyFromPoint;
+				score += 5 * nearestGoodyFromPoint;
 		}
 
 		else if (nearestGhost.getMode().equals(PacMode.valueOf("SCATTER"))) {
 
 			if (nearestGhostFromPoint > nearestGhostFromCur)
-				score += 1 * nearestGhostFromPoint;
+				score += 5 * nearestGhostFromPoint;
 			else if (nearestGhostFromPoint < nearestGhostFromCur)
 				score -= 1 * nearestGhostFromPoint;
 			if (nearestGoodyFromPoint > nearestGoodyFromCur)
-				score -= 2 * nearestGoodyFromPoint;
+				score -= 10 * nearestGoodyFromPoint;
 			else if (nearestGoodyFromPoint < nearestGoodyFromCur)
-				score += 2 * nearestGoodyFromPoint;
+				score += 20 * nearestGoodyFromPoint;
 		}
 
 		else if (nearestGhost.getMode().equals(PacMode.valueOf("FEAR"))) {
