@@ -275,7 +275,6 @@ public class PacSimMinimax implements PacAction {
 		tree makeDecision = new tree(state, depth, cur);
 
 		Point mimax = makeDecision.getNext();
-		System.out.println(mimax);
 
 		path = BFSPath.getPath(grid, pc.getLoc(), mimax);
 		Point next = path.remove( 0 );
