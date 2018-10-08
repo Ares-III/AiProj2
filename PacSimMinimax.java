@@ -30,9 +30,9 @@ class treeNode {
 
 	public treeNode(int value, Point position, int level)
 	{
-		int reward = value;
-		Point currPos = position;
-		int lvl = level;
+		reward = value;
+		currPos = position;
+		lvl = level;
 		children = new ArrayList<>();
 	}
 }
@@ -45,23 +45,24 @@ class tree {
 
 	treeNode maxPos;
 	int maxPointVal;
-	int score;
-	Point next;
-	int max = -9999;
-	Point n;
-	Point e;
-	Point s;
-	Point w;
+
+	// int score;
+	// Point next;
+	// int max = -9999;
+	// Point n;
+	// Point e;
+	// Point s;
+	// Point w;
 
 	final int[] x = {-1,0,1,0};
 	final int[] y = {0,1,0,-1};
 
-	public tree(Object state, int depth)
+	public tree(Object state, int depth, Point position)
 	{
 		this.depth = depth;
 		grid = (PacCell[][]) state;
-		root = new treeNode(0, PacUtils.findPacman(grid).getLoc(), 0);
-		maxPos = root;
+		root = new treeNode(0, position, 0);
+		maxPos = null;
 		maxPointVal = Integer.MIN_VALUE;
 		growTree(root);
 	}
@@ -76,9 +77,9 @@ class tree {
 	 * closer to a ghost or further from a goody. In fear mode, distance to ghost
 	 * is disregarded, and score increases if pacman moves closer to a goody.
 	 */
-	public int eval(Point cur, Point newPoint) {
+	private int eval(Point cur, Point newPoint) {
 
-		score = 0;
+		int score = 0;
 
 		GhostCell nearestGhost = PacUtils.nearestGhost(cur, grid);
 		Point nearestGoody = PacUtils.nearestGoody(cur, grid);
@@ -125,57 +126,59 @@ class tree {
 
 	}
 
-	public Point findNext(Point cur, PacCell[][] grid) {
-
-		PacCell move = PacUtils.neighbor(PacFace.valueOf("N"), cur, grid);
-		if (move instanceof PathCell) {
-			n = move.getLoc();
-			score = eval(cur, n);
-		}
-
-		if (score > max) {
-			max = score;
-			next = n;
-		}
-
-		move = PacUtils.neighbor(PacFace.valueOf("E"), cur, grid);
-		if (move instanceof PathCell) {
-			e = move.getLoc();
-			score = eval(cur, e);
-		}
-
-		if (score > max) {
-			max = score;
-			next = e;
-		}
-
-		move = PacUtils.neighbor(PacFace.valueOf("S"), cur, grid);
-		if (move instanceof PathCell) {
-			s = move.getLoc();
-			score = eval(cur, s);
-		}
-
-		if (score > max) {
-			max = score;
-			next = s;
-		}
-
-		move = PacUtils.neighbor(PacFace.valueOf("W"), cur, grid);
-		if (move instanceof PathCell) {
-			w = move.getLoc();
-			score = eval(cur, w);
-		}
-
-		if (score > max) {
-			max = score;
-			next = w;
-		}
-
-		return next;
-	}
+	// private Point findNext(Point cur, PacCell[][] grid) {
+	//
+	// 	PacCell move = PacUtils.neighbor(PacFace.valueOf("N"), cur, grid);
+	// 	if (move instanceof PathCell) {
+	// 		n = move.getLoc();
+	// 		score = eval(cur, n);
+	// 	}
+	//
+	// 	if (score > max) {
+	// 		max = score;
+	// 		next = n;
+	// 	}
+	//
+	// 	move = PacUtils.neighbor(PacFace.valueOf("E"), cur, grid);
+	// 	if (move instanceof PathCell) {
+	// 		e = move.getLoc();
+	// 		score = eval(cur, e);
+	// 	}
+	//
+	// 	if (score > max) {
+	// 		max = score;
+	// 		next = e;
+	// 	}
+	//
+	// 	move = PacUtils.neighbor(PacFace.valueOf("S"), cur, grid);
+	// 	if (move instanceof PathCell) {
+	// 		s = move.getLoc();
+	// 		score = eval(cur, s);
+	// 	}
+	//
+	// 	if (score > max) {
+	// 		max = score;
+	// 		next = s;
+	// 	}
+	//
+	// 	move = PacUtils.neighbor(PacFace.valueOf("W"), cur, grid);
+	// 	if (move instanceof PathCell) {
+	// 		w = move.getLoc();
+	// 		score = eval(cur, w);
+	// 	}
+	//
+	// 	if (score > max) {
+	// 		max = score;
+	// 		next = w;
+	// 	}
+	//
+	// 	return next;
+	// }
 
 	private void growTree(treeNode current)
 	{
+		String[] locations = {"N", "S", "E", "W"};
+
 		for(int i = 0; i < 4; i++)
 		{
 			if(PacUtils.unoccupied(current.currPos.x+x[i], current.currPos.y+y[i], grid))
@@ -184,6 +187,7 @@ class tree {
 				int pointVal = eval(current.currPos, thePoint);
 				treeNode newNode = new treeNode(pointVal, thePoint, current.lvl+1);
 				current.children.add(newNode);
+
 				if(current.lvl+1 == depth && pointVal > maxPointVal)
 				{
 					maxPos = newNode;
@@ -210,11 +214,14 @@ class tree {
 
 public class PacSimMinimax implements PacAction {
 
+	int depth;
+	private List<Point> path;
 
 	public PacSimMinimax(int depth, String fname, int te, int gran, int max)
 	{
 		/* initialize variables */
 		PacSim sim = new PacSim(fname, te, gran, max);
+		this.depth = depth;
 		sim.init(this);
 	}
 
@@ -249,20 +256,32 @@ public class PacSimMinimax implements PacAction {
 	}
 
 	@Override
-	public void init() {}
+	public void init()
+	{
+		path = new ArrayList();
+	}
 
 	@Override
 	public PacFace action(Object state)
 	{
 		PacCell[][] grid = (PacCell[][]) state;
 		PacFace newFace = null;
-		PacmanCell pc = PacUtils.findPacman(grid);
+		PacmanCell pc = PacUtils.findPacman( grid );
+
+		if( pc == null ) return null;
 
 		Point cur = pc.getLoc();
-		Point nextMove = findNext(cur, grid);
 
-		newFace = PacUtils.direction(cur, nextMove);
-	    grid = PacUtils.movePacman(cur, nextMove, grid);
+		tree makeDecision = new tree(state, depth, cur);
+
+		Point mimax = makeDecision.getNext();
+		System.out.println(mimax);
+
+		path = BFSPath.getPath(grid, pc.getLoc(), mimax);
+		Point next = path.remove( 0 );
+
+		newFace = PacUtils.direction(cur, next);
+	   grid = PacUtils.movePacman(cur, next, grid);
 
 		return newFace;
 	}
